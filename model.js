@@ -28,7 +28,9 @@
     pick(seat,tie=false){
       if(!this.deal.hands[seat])return false;
       if(this.selected.includes(seat)){
-        this.groups=this.groups.map(g=>g.filter(s=>s!==seat)).filter(g=>g.length);
+        const last=this.groups[this.groups.length-1];
+        if(last[last.length-1]!==seat){this.message='Чтобы отменить выбор, нажмите на последнюю выбранную руку.';return false;}
+        last.pop();if(!last.length)this.groups.pop();
         this.message='';return true;
       }
       if(tie&&!this.groups.length){this.message='Сначала выберите самую сильную руку';return false;}
