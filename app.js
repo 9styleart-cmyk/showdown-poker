@@ -5,7 +5,7 @@
   const suits={s:'♠',h:'♥',d:'♦',c:'♣'},names={s:'пики',h:'червы',d:'бубны',c:'трефы'};
   let answer,round=0,tie=false;
   function card(value){const el=document.createElement('span');el.className='card'+('hd'.includes(value[1])?' red':'');const r=document.createElement('span'),s=document.createElement('span');r.textContent=value[0]==='T'?'10':value[0];s.textContent=suits[value[1]];s.className='suit';el.append(r,s);el.setAttribute('aria-label',`${r.textContent} ${names[value[1]]}`);return el;}
-  function pick(seat,equal){answer.pick(seat,equal);render();}
+  function pick(seat,equal){answer.pick(seat,equal);if(!answer.groups.length)tie=false;render();}
   function render(){
     $('round').textContent=`Раздача ${round} · ${Object.keys(answer.deal.hands).length} игроков`;
     $('board').replaceChildren(...answer.deal.board.map(card));
@@ -19,7 +19,7 @@
         const label=document.createElement('span');label.className='label';label.textContent=`Место ${seat}`;
         const badge=document.createElement('span');badge.className='badge';badge.textContent=group<0?'':`#${group+1}`;label.append(badge);
         const hand=document.createElement('span');hand.className='cards';hand.append(...cards.map(card));button.append(label,hand);
-        button.disabled=group>=0||answer.complete;if(group>=0)button.classList.add('selected');
+        button.setAttribute('aria-pressed',String(group>=0));if(group>=0)button.classList.add('selected');
         button.addEventListener('click',()=>pick(seat,tie));button.addEventListener('contextmenu',e=>{e.preventDefault();pick(seat,true);});
       }
       $('seats').append(button);

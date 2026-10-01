@@ -26,7 +26,11 @@
     get complete(){return this.selected.length===Object.keys(this.deal.hands).length;}
     get isCorrect(){return this.complete&&JSON.stringify(this.groups.map(g=>[...g].sort((a,b)=>a-b)))===JSON.stringify(this.correct);}
     pick(seat,tie=false){
-      if(this.complete||!this.deal.hands[seat]||this.selected.includes(seat))return false;
+      if(!this.deal.hands[seat])return false;
+      if(this.selected.includes(seat)){
+        this.groups=this.groups.map(g=>g.filter(s=>s!==seat)).filter(g=>g.length);
+        this.message='';return true;
+      }
       if(tie&&!this.groups.length){this.message='Сначала выберите самую сильную руку';return false;}
       this.message='';if(tie)this.groups[this.groups.length-1].push(seat);else this.groups.push([seat]);return true;
     }
