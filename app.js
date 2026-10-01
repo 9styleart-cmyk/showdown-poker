@@ -5,7 +5,7 @@
   const suits={s:'♠',h:'♥',d:'♦',c:'♣'},names={s:'пики',h:'червы',d:'бубны',c:'трефы'};
   let answer,round=0,tie=false;
   function card(value){const el=document.createElement('span');el.className='card'+('hd'.includes(value[1])?' red':'');const r=document.createElement('span'),s=document.createElement('span');r.textContent=value[0]==='T'?'10':value[0];s.textContent=suits[value[1]];s.className='suit';el.append(r,s);el.setAttribute('aria-label',`${r.textContent} ${names[value[1]]}`);return el;}
-  function pick(seat,equal){if(answer.pick(seat,equal))tie=false;render();}
+  function pick(seat,equal){answer.pick(seat,equal);render();}
   function render(){
     $('round').textContent=`Раздача ${round} · ${Object.keys(answer.deal.hands).length} игроков`;
     $('board').replaceChildren(...answer.deal.board.map(card));
@@ -29,7 +29,7 @@
     $('result').replaceChildren();$('result').className='';
     if(answer.complete){const correct=answer.isCorrect;$('result').className=correct?'success':'error';const title=document.createElement('strong');title.textContent=correct?'Верно':'Неверно';$('result').append(title,document.createTextNode('Правильно: '+Poker.format(correct?answer.groups:answer.correct)));}
     $('tie').disabled=!answer.groups.length||answer.complete;$('tie').setAttribute('aria-pressed',String(tie));
-    $('hint').textContent=answer.message||(tie?'Теперь нажмите на игрока с равной рукой.':'Нажатие — следующая группа. Равная рука — кнопкой или ПКМ.');
+    $('hint').textContent=answer.message||(tie?'Делёжка включена. Выбирайте равные руки. Нажмите «=», чтобы выключить.':'Выбирайте по старшинству. «=» включает режим делёжки.');
   }
   function next(){answer=new Poker.Answer(Poker.deal());round++;tie=false;render();}
   function reset(){answer.reset();tie=false;render();}
